@@ -19,6 +19,8 @@ CREATE TABLE images(
        url VARCHAR(255),
        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-       PRIMARY KEY (id),
-       FOREIGN KEY (album_id) REFERENCES albums(id) on delete cascade on update cascade
+       PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `images` ADD CONSTRAINT `album_id` FOREIGN KEY (`album_id`) REFERENCES `albums`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `images` ADD INDEX (`album_id`);

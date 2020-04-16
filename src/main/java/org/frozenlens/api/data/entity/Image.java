@@ -10,11 +10,9 @@ public class Image {
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(name="album_id")
-    private long album_id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "album_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "album_id")
     private Album album;
 
     @Column(name="name")
@@ -38,14 +36,6 @@ public class Image {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getAlbum_id() {
-        return album_id;
-    }
-
-    public void setAlbum_id(long album_id) {
-        this.album_id = album_id;
     }
 
     public String getName() {

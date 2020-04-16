@@ -1,7 +1,9 @@
 package org.frozenlens.api.data.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,9 +25,12 @@ public class Album {
     private Date created_at;
     @Column(name="updated_at")
     private Date updated_at;
+    @OneToMany(mappedBy="album", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Image> images = new ArrayList<>();
 
-    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
-    private Set<Image> images;
+    public List<Image> getImages() {
+        return images;
+    }
 
     public long getId() {
         return id;
