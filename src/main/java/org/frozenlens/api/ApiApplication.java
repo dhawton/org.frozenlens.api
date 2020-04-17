@@ -26,7 +26,7 @@ public class ApiApplication {
 		public Iterable<Album> getAlbums() {
 			return this.albumRepository.findAll();
 		}
-		
+
 		@GetMapping("/{id}/images")
 		public Iterable<Image> getImages(@PathVariable("id") long id) {
 			return this.albumRepository.findById(id).get().getImages();
