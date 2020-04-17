@@ -1,5 +1,6 @@
 package org.frozenlens.api.controllers;
 
+import org.frozenlens.api.dto.LoginRequest;
 import org.frozenlens.api.dto.RegisterRequest;
 import org.frozenlens.api.exception.ErrorResponse;
 import org.frozenlens.api.exception.ValidationException;
@@ -26,6 +27,15 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
+    }
+
+    @PostMapping("/login")
+    public void login(@Valid @RequestBody LoginRequest loginRequest, Errors errors) {
+        if (errors.hasErrors()) {
+            throw new ValidationException(errors);
+        }
+
+
     }
 
     @PostMapping("/register")
