@@ -24,3 +24,16 @@ CREATE TABLE images(
 
 ALTER TABLE `images` ADD CONSTRAINT `album_id` FOREIGN KEY (`album_id`) REFERENCES `albums`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `images` ADD INDEX (`album_id`);
+
+CREATE TABLE users(
+    id BIGINT(21) UNSIGNED NOT NULL AUTO_INCREMENT,
+    username VARCHAR(128) NOT NULL,
+    password VARCHAR(128),
+    email VARCHAR(128),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(id)
+);
+
+ALTER TABLE `users` ADD INDEX(`username`);
+ALTER TABLE `users` ADD INDEX(`email`);
