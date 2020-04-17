@@ -4,7 +4,11 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name="users")
+@Table(name = "users",
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = "username"),
+            @UniqueConstraint(columnNames = "email")
+        })
 public class User {
     @Id
     @Column(name="id")

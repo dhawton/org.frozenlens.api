@@ -30,6 +30,15 @@ public class Image {
     @Column(name="updated_at")
     private Date updated_at;
 
+
+    public Album getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(Album album) {
+        this.album = album;
+    }
+
     public long getId() {
         return id;
     }
