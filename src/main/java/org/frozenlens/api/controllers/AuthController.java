@@ -4,6 +4,8 @@ import org.frozenlens.api.dto.RegisterRequest;
 import org.frozenlens.api.exception.ErrorResponse;
 import org.frozenlens.api.exception.ValidationException;
 import org.frozenlens.api.service.AuthService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -20,6 +22,7 @@ import java.util.List;
 @RequestMapping("/auth")
 public class AuthController {
     private final AuthService authService;
+    private Logger log = LoggerFactory.getLogger(AuthController.class);
 
     public AuthController(AuthService authService) {
         this.authService = authService;
@@ -31,6 +34,7 @@ public class AuthController {
             throw new ValidationException(errors);
         }
         authService.register(registerRequest);
+        log.info(String.format("User Registered (email='%s', username='%s'", registerRequest.getEmail(), registerRequest.getUsername()));
         return new ResponseEntity<>("OK", HttpStatus.CREATED);
     }
 }
