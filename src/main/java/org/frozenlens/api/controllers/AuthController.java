@@ -18,12 +18,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -42,14 +40,14 @@ public class AuthController {
     }
 
     @GetMapping("/refresh")
-    public ResponseEntity<? extends Object> refresh(Authentication authentication) {
+    public ResponseEntity<TokenResponse> refresh(Authentication authentication) {
         String token = jwtUtils.generateJwtToken(authentication);
 
         return new ResponseEntity<>(new TokenResponse(token, "Bearer", authentication.getName()), HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<? extends Object> login(@Valid @RequestBody LoginRequest loginRequest, Errors errors) {
+    public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest loginRequest, Errors errors) {
         if (errors.hasErrors()) {
             throw new ValidationException(errors);
         }
