@@ -10,6 +10,7 @@ import org.frozenlens.api.security.UserDetailsImpl;
 import org.frozenlens.api.service.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,10 +18,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -28,12 +31,21 @@ public class AuthController {
     private final AuthService authService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
+    @Value("${app.registration.enabled}")
+    private Boolean registrationEnabled;
     private Logger log = LoggerFactory.getLogger(AuthController.class);
 
     public AuthController(AuthService authService, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
         this.authService = authService;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
+    }
+
+    @GetMapping("/refresh")
+    public ResponseEntity<? extends Object> refresh(Authentication authentication) {
+        String token = jwtUtils.generateJwtToken(authentication);
+
+        return new ResponseEntity<>(new TokenResponse(token, "Bearer", authentication.getName()), HttpStatus.OK);
     }
 
     @PostMapping("/login")
@@ -61,6 +73,10 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest registerRequest, Errors errors) {
+        if (!registrationEnabled) {
+            log.warn(String.format("Registration attempted with username: %s, email: %s, while registrations are disabled.", registerRequest.getUsername(), registerRequest.getEmail()));
+            throw new GeneralException("Not found", "", HttpStatus.NOT_FOUND);
+        }
         if (errors.hasErrors()) {
             throw new ValidationException(errors);
         }

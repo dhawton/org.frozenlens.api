@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -44,7 +46,7 @@ public class JwtUtils {
 
     public String getUsernameFromJwtToken(String token) {
         return buildParser()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }
@@ -61,10 +63,11 @@ public class JwtUtils {
     }
 
     public boolean validateJwtToken(String token) {
+        log.debug("Checking token " + token);
         checkKeyOrBuild();
 
         try {
-            buildParser().parseClaimsJwt(token);
+            buildParser().parse(token);
             return true;
         } catch(SignatureException e) {
             log.error("Caught invalid JWT Signature: " + e.getMessage());
@@ -74,6 +77,9 @@ public class JwtUtils {
             log.info("Caught expired token.");
         } catch(UnsupportedJwtException e) {
             log.error("Caught unsupported JWT Token: " + e.getMessage());
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            log.error(sw.toString());
         } catch(IllegalArgumentException e) {
             log.error("JWT claims exception or empty, " + e.getMessage());
         }

@@ -28,11 +28,13 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         throws ServletException, IOException {
         try {
             String jwt = parseJwt(request);
+            log.debug("In filter, jwt: " + jwt);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String username = jwtUtils.getUsernameFromJwtToken(jwt);
+                log.debug("JWT validated, username is " + username);
 
                 UserDetails userDetails = userDetailService.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

@@ -4,6 +4,16 @@
       "name": "app.jwt.secret",
       "type": "java.lang.String",
       "description": "Description for app.jwt.secret."
+    },
+    {
+      "name": "app.jwt.lifetime",
+      "type": "java.lang.Integer",
+      "description": "Lifetime of the JSON Web Token"
+    },
+    {
+      "name": "app.registration.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Is registration available?"
     }
   ]
 }
